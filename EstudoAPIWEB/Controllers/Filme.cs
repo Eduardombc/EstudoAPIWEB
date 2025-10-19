@@ -1,0 +1,16 @@
+﻿namespace EstudoAPIWEB.Controllers
+{
+    public class Filme
+    {
+        public string Titulo { get; set; }
+        public string Genero { get; set; }
+        public int Duracao { get; set; }
+
+        public Filme(string titulo, string genero, int duracao)
+        {
+            Titulo = titulo;
+            Genero = genero;
+            Duracao = duracao;
+        }
+    }
+}   
