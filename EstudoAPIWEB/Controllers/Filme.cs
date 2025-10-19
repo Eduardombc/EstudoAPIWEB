@@ -1,16 +1,24 @@
-﻿namespace EstudoAPIWEB.Controllers
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EstudoAPIWEB.Controllers
 {
     public class Filme
     {
-        public string Titulo { get; set; }
-        public string Genero { get; set; }
-        public int Duracao { get; set; }
+        public int Id { get; set; }
 
-        public Filme(string titulo, string genero, int duracao)
-        {
-            Titulo = titulo;
-            Genero = genero;
-            Duracao = duracao;
-        }
+
+        [Required (ErrorMessage = "O título do filme é obrigatório" )]
+        public string Titulo { get; set; }
+
+
+        [Required (ErrorMessage = "O Genero do filme é obrigatório")]
+        [MaxLength(50, ErrorMessage = "O gênero do filme não pode exceder 50 caracteres")]
+        public string Genero { get; set; }
+
+
+        [Required (ErrorMessage = "O Duracao do filme é obrigatório")]
+        [Range(70,600, ErrorMessage = "A duração do filme deve estar entre 70 e 600 minutos")]
+        public int Duracao { get; set; }
+        
     }
 }   
