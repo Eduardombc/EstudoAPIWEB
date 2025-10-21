@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using EstudoAPIWEB.Data;
+using EstudoAPIWEB.Data.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EstudoAPIWEB.Controllers;
@@ -7,15 +10,22 @@ namespace EstudoAPIWEB.Controllers;
 [Route("[controller]")]
 public class FilmeController : ControllerBase
 {
+    private IMapper _mapper;
 
-    private static List<Filme> filmes = new List<Filme>();
-    private static int id = 0;
+    private FilmeContext _context;
+
+    public FilmeController(FilmeContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
 
     [HttpPost]
-    public IActionResult AdicionaFilme([FromBody] Filme filme)
+    public IActionResult AdicionaFilme([FromBody] CreateFilmeDTO filmeDTO)
     {
-        filme.Id = ++id;
-        filmes.Add(filme);
+        Filme filme = _mapper.Map<Filme>(filmeDTO);
+        _context.Filmes.Add(filme);
+        _context.SaveChanges();
         return CreatedAtAction(nameof(RecuperaFilmesPorID),
             new { id = filme.Id },
             filme);
@@ -25,11 +35,11 @@ public class FilmeController : ControllerBase
     public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, 
         [FromQuery] int take = 10)
     {
-        return filmes.Skip(skip).Take(take);
+        return _context.Filmes.Skip(skip).Take(take);
     }
     public IActionResult RecuperaFilmesPorID(int id)
     {
-        var filme = filmes.FirstOrDefault( f => f.Id == id);
+        var filme = _context.Filmes.FirstOrDefault( f => f.Id == id);
         if (filme is null) return NotFound(); 
             return Ok(filme);
     }
@@ -37,7 +47,7 @@ public class FilmeController : ControllerBase
     [HttpDelete]
     public IActionResult DeletaFilme(int id)
     {
-        var filme = filmes.FirstOrDefault(f => f.Id == id);
+        var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
         if (filme is null) return NotFound();
         filmes.Remove(filme);
         return NoContent();
