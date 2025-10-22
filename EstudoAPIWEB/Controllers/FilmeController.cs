@@ -2,6 +2,7 @@
 using EstudoAPIWEB.Data;
 using EstudoAPIWEB.Data.DTOs;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EstudoAPIWEB.Controllers;
@@ -32,18 +33,19 @@ public class FilmeController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, 
+    public IEnumerable<ReadFilmeDTO> RecuperaFilmes([FromQuery] int skip = 0, 
         [FromQuery] int take = 10)
     {
-        return _context.Filmes.Skip(skip).Take(take);
+        return _mapper.Map<List<ReadFilmeDTO>>(_context.Filmes.Skip(skip).Take(take));
     }
 
-    [HttpGet]
+    [HttpGet("{id}")]
     public IActionResult RecuperaFilmesPorID(int id)
     {
         var filme = _context.Filmes.FirstOrDefault( f => f.Id == id);
-        if (filme is null) return NotFound(); 
-            return Ok(filme);
+        if (filme is null) return NotFound();
+        var filmeDTO = _mapper.Map<ReadFilmeDTO>(filme);
+        return Ok(filme);
     }
 
     [HttpPut("{id}")]
@@ -56,13 +58,30 @@ public class FilmeController : ControllerBase
         return NoContent();
     }
 
+    [HttpPatch("{id}")]
+    public IActionResult AtualizaFilmePartial(int id,JsonPatchDocument<UpdateFilmeDTO> patch)
+    {
+        var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
+        if (filme is null) return NotFound();
 
-    [HttpDelete]
+        var filmeParaAtualizar = _mapper.Map<UpdateFilmeDTO>(filme);
+        if(!TryValidateModel(filmeParaAtualizar))
+        {
+            return ValidationProblem(ModelState);
+        }
+        _mapper.Map(filmeParaAtualizar, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
+
+    [HttpDelete("{id}")]
     public IActionResult DeletaFilme(int id)
     {
         var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
         if (filme is null) return NotFound();
-        filmes.Remove(filme);
+        _context.Filmes.Remove(filme);
+        _context.SaveChanges();
         return NoContent();
     }
 }

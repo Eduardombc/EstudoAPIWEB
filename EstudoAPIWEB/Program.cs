@@ -1,15 +1,17 @@
 using EstudoAPIWEB.Data;
 using Microsoft.EntityFrameworkCore;
+using EstudoAPIWEB.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("FilmeConnection");
 
 builder.Services.AddDbContext<FilmeContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// Register AutoMapper using the DI extension and explicit profile type to avoid ambiguous overloads
+builder.Services.AddAutoMapper(typeof(FilmeProfile));
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 var app = builder.Build();
 

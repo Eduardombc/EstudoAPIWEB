@@ -2,6 +2,12 @@
 
 namespace EstudoAPIWEB.Controllers;
 
+/// <summary>
+/// Represents a movie with properties for its title, genre, and duration.
+/// </summary>
+/// <remarks>This class is used to store and manage information about a movie, including its unique identifier,
+/// title, genre, and duration. All properties are required and include validation attributes to ensure data
+/// integrity.</remarks>
 public class Filme
 {
     [Key]
