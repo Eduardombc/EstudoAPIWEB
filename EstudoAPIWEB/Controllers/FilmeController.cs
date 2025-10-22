@@ -37,12 +37,25 @@ public class FilmeController : ControllerBase
     {
         return _context.Filmes.Skip(skip).Take(take);
     }
+
+    [HttpGet]
     public IActionResult RecuperaFilmesPorID(int id)
     {
         var filme = _context.Filmes.FirstOrDefault( f => f.Id == id);
         if (filme is null) return NotFound(); 
             return Ok(filme);
     }
+
+    [HttpPut("{id}")]
+    public IActionResult AtualizaFilme(int id,[FromBody] UpdateFilmeDTO filmeDTO)
+    {
+        var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
+        if (filme is null) return NotFound();
+        _mapper.Map(filmeDTO, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
 
     [HttpDelete]
     public IActionResult DeletaFilme(int id)

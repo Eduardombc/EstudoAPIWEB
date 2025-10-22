@@ -2,7 +2,7 @@
 
 namespace EstudoAPIWEB.Data.DTOs;
 
-public class UpdateFilmeDTO
+public class CreateFilmeDTO
 {
 
     [Required(ErrorMessage = "O título do filme é obrigatório")]
