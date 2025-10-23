@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EstudoAPIWEB.Controllers;
 using EstudoAPIWEB.Data.DTOs;
+using EstudoAPIWEB.Models;
 
 namespace EstudoAPIWEB.Profiles;
 

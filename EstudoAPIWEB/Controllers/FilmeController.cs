@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EstudoAPIWEB.Data;
 using EstudoAPIWEB.Data.DTOs;
+using EstudoAPIWEB.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;

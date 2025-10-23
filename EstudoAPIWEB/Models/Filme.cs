@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EstudoAPIWEB.Controllers;
+namespace EstudoAPIWEB.Models;
 
 /// <summary>
 /// Represents a movie with properties for its title, genre, and duration.
